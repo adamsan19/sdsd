@@ -1,7 +1,8 @@
-import { NextResponse } from "next/server";
-import { fetchDataWithCache } from "@/app/lib/fetchData";
-import { setCorsHeaders } from "@/app/lib/cors";
-import { processTitle } from "@/app/lib/titleProcessor";
+import { NextResponse } from "next/server"
+import { fetchDataWithMultiLayerCache } from "../../lib/fetchDataMultiLayerCache"
+import { setCorsHeaders } from "../../lib/cors"
+import { processTitle } from "../../lib/titleProcessor"
+
 export const runtime = 'edge';
 export const revalidate = 86400; // Revalidate every 24 hours (1 day)
 
@@ -26,7 +27,7 @@ export async function GET(request: Request) {
   const perPage = Number.parseInt(searchParams.get("per_page") || "50");
 
   try {
-    const data = await fetchDataWithCache();
+    const data = await fetchDataWithMultiLayerCache();
 
     const startIndex = (page - 1) * perPage;
     const endIndex = startIndex + perPage;

@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server"
-import { fetchDataWithCache } from "@/app/lib/fetchData"
-import { setCorsHeaders } from "@/app/lib/cors"
-import { processTitle } from "@/app/lib/titleProcessor"
+import { fetchDataWithMultiLayerCache } from "../../lib/fetchDataMultiLayerCache"
+import { setCorsHeaders } from "../../lib/cors"
+import { processTitle } from "../../lib/titleProcessor"
+
 export const runtime = 'edge';
 export const revalidate = 86400 // Revalidate every 24 hours (1 day)
 
@@ -11,7 +12,7 @@ export async function GET(request: Request) {
   const perPage = Number.parseInt(searchParams.get("per_page") || "50")
 
   try {
-    const data = await fetchDataWithCache()
+    const data = await fetchDataWithMultiLayerCache()
 
     // Mengacak data menggunakan algoritma Fisher-Yates shuffle
     const shuffledData = [...data]
@@ -59,4 +60,3 @@ export async function GET(request: Request) {
 export async function OPTIONS() {
   return setCorsHeaders(new NextResponse(null, { status: 200 }))
 }
-
